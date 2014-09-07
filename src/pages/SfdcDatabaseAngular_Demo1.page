@@ -51,17 +51,17 @@
 						   </span>
 						</td>
 						<td field-name="Name">
-							<span editable-text="gridItem.Name" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: false})">
+							<span editable-text="gridItem.Name" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: false})">
 								 {{ gridItem.Name }}
 						   </span>
 						</td>
 						<td field-name="AnnualRevenue__c">
-							<span editable-text="gridItem.AnnualRevenue__c" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true})">
+							<span editable-text="gridItem.AnnualRevenue__c" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true})">
 								 {{ gridItem.AnnualRevenue__c }}
 						   </span>
 						</td>
 						<td field-name="Phone__c">
-							<span editable-text="gridItem.Phone__c" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true, vfrVia$Http: true})">
+							<span editable-text="gridItem.Phone__c" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true, vfrVia$Http: true})">
 								 {{ gridItem.Phone__c }}
 						   </span>
 						</td>
