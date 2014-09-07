@@ -1,0 +1,71 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+
+	<style>
+	</style>
+
+	<div class="page-header">
+		<div>
+			<h3>Methods</h3>
+		</div>
+		<div class="function-doc">
+			<div class="function-intro">
+				<p class="function-signature"><code>sfdc.insert(records, restOrJsrConfig, transportFlags);</code></p>
+				<div class="function-examples">
+					<pre>
+var account = {
+	Name: 'Test Co',
+	AccountRevenue: 5000,
+	attributes: {
+		type: 'Account'
+	}
+};
+sfdc.insert(account);
+
+// Customize $http config if using REST
+sfdc.insert(account, { cache: true });
+
+// Customize JavaScript Remoting config if using JSR.
+sfdc.insert(account, { buffer: false }, { useJsr: true });
+					</pre>
+				</div>
+			</div>
+			<div class="function-intro">
+				<p class="function-signature"><code>sfdc.update(records, restOrJsrConfig, transportFlags);</code></p>
+				<div class="function-examples">
+					<pre>
+var account = {
+	Id: '001abc820dfjfd2',
+	Name: 'Test Co',
+	AccountRevenue: 5000
+};
+sfdc.update(account);
+
+// Customize $http config if using REST
+sfdc.update(account, { cache: true });
+
+// Customize JavaScript Remoting config if using JSR.
+sfdc.update(account, { buffer: false }, { useJsr: true });
+					</pre>
+				</div>
+			</div>
+			<div class="function-intro">
+				<p class="function-signature"><code>sfdc.query(soql, restOrJsrConfig, transportFlags);</code></p>
+				<div class="function-examples">
+					<pre>
+var accountSoql = "SELECT Id, Name, AccountRevenue" +
+	" FROM Account" +
+	" ORDER BY LastModifiedDate";
+
+// Customize $http config if using REST
+sfdc.query(accountSoql, { cache: true });
+
+// Customize JavaScript Remoting config if using JSR.
+sfdc.query(accountSoql, { buffer: false }, { useJsr: true });
+					</pre>
+				</div>
+			</div>
+			<br/>
+		</div>
+	</div>
+
+</apex:page>

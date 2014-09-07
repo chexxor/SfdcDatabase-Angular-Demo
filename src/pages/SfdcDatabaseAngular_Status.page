@@ -1,0 +1,17 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+
+	<div class="page-header">
+		<div>
+			<h3>Project Status</h3>
+		</div>
+		<div class="project-status">
+			<p>
+				The "SFDC Database for Angular" project is an <strong>early preview</strong>. It is shared in this state to show the project's status and goals. It doesn't have tests written, so it probably isn't ready for you to easily plug-and-play quite yet. It doesn't even have a <code>sfdc.delete()</code> method yet! You are, however, welcome to try it out and help out.
+			</p>
+			<p>
+				It will likely see some re-structuring to move functions and responsibilities between modules, but the method signatures shouldn't change too much, as that's the goal of this project.
+			</p>
+		</div>
+	</div>
+	
+</apex:page>

@@ -1,0 +1,77 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+
+	<style>
+	</style>
+	
+	<div class="demo-table-edit container">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3>Demo</h3>
+			</div>
+			<div class="panel-body">
+				<p>The following table has editable cells. Each column has a different edit-handler, just to demonstrate.</p>
+				<br/>
+				<div class="pull-left" style="width: 350px;">
+					<p>
+						Edits to <code>Name</code> use Salesforce REST.
+					</p>
+					<p>
+						Edits to <code>Annual Revenue</code> use JavaScript Remoting.
+					</p>
+					<p>
+						Edits to <code>Phone</code> use JavaScript Remoting via Angular's <code>$http</code>.
+					</p>
+				</div>
+				<div class="pull-left" style="width: 370px;">
+					<p>
+						<span><code>transportflags = {useJsr: false};</code></span>
+					</p>
+					<p>
+						<span><code>transportflags = {useJsr: true};</code></span>
+					</p>
+					<p>
+						<span><code>transportflags = {useJsr: true, vfrVia$Http: true};</code></span>
+					</p>
+				</div>
+
+				<table style="margin-top: 20px;" class="pull-left" tr-ng-grid="trNgGrid" items="AccountState.mruAccounts" fields="['Id', 'Name', 'AnnualRevenue__c', 'Phone__c']">
+					<thead>
+						<tr>
+							<th field-name="Id" display-name="Id" enable-filtering="false" enable-sorting="false" cell-width="10em" display-align="right"> </th>
+							<th field-name="Name" display-name="Name (REST)"> </th>
+							<th field-name="AnnualRevenue__c" display-name="Annual Revenue (JSR)" display-format="currency:'USD$'"> </th>
+							<th field-name="Phone__c" display-name="Phone (JSR $http)" display-format="" cell-width=""> </th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td field-name="Id">
+							<span>
+								 {{ gridItem.Id }}
+						   </span>
+						</td>
+						<td field-name="Name">
+							<span editable-text="gridItem.Name" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: false})">
+								 {{ gridItem.Name }}
+						   </span>
+						</td>
+						<td field-name="AnnualRevenue__c">
+							<span editable-text="gridItem.AnnualRevenue__c" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true})">
+								 {{ gridItem.AnnualRevenue__c }}
+						   </span>
+						</td>
+						<td field-name="Phone__c">
+							<span editable-text="gridItem.Phone__c" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true, vfrVia$Http: true})">
+								 {{ gridItem.Phone__c }}
+						   </span>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- <table style="width: 100px;" class="pull-right" tr-ng-grid="trNgGrid" items="AccountState.mruAccounts" fields="['Id', 'Name', 'AnnualRevenue']"> </table> -->
+	</div>
+		
+</apex:page>

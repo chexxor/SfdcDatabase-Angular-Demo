@@ -1,0 +1,148 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+
+	<div class="page-header">
+		<div>
+			<h3>Comparison to Other Tools</h3>
+		</div>
+		<div class="comparison-to-other-tools">
+			<p>
+				Have you tried other SFDC toolkits? I've tried a few, and they are pretty disappointing. Apex programming is so simple and painless, I've come to look for tools which provide a similar level of simplicity.
+			</p>
+			<p>
+				Let's look at the methods provided by similar tools.
+			</p>
+			<hr/>
+			<div class="comparison panel panel-default">
+				<p class="comparison-name panel-heading">ForceTK (Force.com-JavaScript-REST-Toolkit)</p>
+				<div class="comparison-examples panel-body">
+					<pre>
+var client = new forcetk.Client();
+client.setSessionToken('{&#33;$Api.Session_ID}');
+
+client.query("SELECT Name FROM Account LIMIT 1", function(response){
+  $j('#accountname').html(response.records[0].Name);
+});
+
+client.update('Account', id, fields, updateCallback, errorCallback);
+					</pre>
+					<p>
+						Sources:
+						<a href="https://github.com/developerforce/Force.com-JavaScript-REST-Toolkit/blob/1f60e0f4a6c48a45870c772f7aa9f96585f156af/app.js#L64">client.query</a>,
+						<a href="https://github.com/developerforce/Force.com-JavaScript-REST-Toolkit/blob/1f60e0f4a6c48a45870c772f7aa9f96585f156af/app.js#L190">client.update</a>
+					</p>
+				</div>
+				<div class="comparison-review panel-body">
+					<p>
+						ForceTK is the original JavaScript SFDC toolkit. It performs its job well, which is proxying to SFDC REST API endpoints via the proxy built-in to the VisualForce platform. Sadly, that's its only feature. If app is not hosted by Visualforce, you can use a drop-in replacement for the VF proxy written in PHP.
+					</p>
+					<p>
+						ForceTK's CRUD API is a little goofy - you can't just pass an object record into it. How do you update several records at once? It looks like the methods only support updating one record, so you'll have to loop over a list of records yourself. If you want to update a list of 100 records, you will have to send 100 HTTP requests. Browsers only send 8 requests at a time, so updating multiple records is just not practical.
+					</p>
+					<h4>Problems:</h4>
+					<ul>
+						<li>REST-only</li>
+						<li>CRUD does not support multiple records</li>
+					</ul>
+				</div>
+			</div>
+			<hr/>
+			<div class="comparison panel panel-default">
+				<p class="comparison-name panel-heading">ngForce</p>
+				<div class="comparison-examples panel-body">
+					<pre>
+// (Auth token is injected to request elsewhere)
+
+vfr.query("SELECT Name FROM Account LIMIT 1"); // Remoting
+sfrquery.query("SELECT Name FROM Account LIMIT 1", cacheEnabled); // REST
+
+vfr.update('Account', id, fields); // Remoting
+sfr.update('Account', record); // REST
+					</pre>
+					<p>
+						Sources:
+						<a href="https://github.com/noeticpenguin/ngForce/blob/8eb08f59c58ce0299b9d985e51188d0163c07e90/src/classes/ngForceController.cls#L511">vfr.query</a>,
+						<a href="https://github.com/noeticpenguin/ngForce/blob/955297bfdb525205f363345bea04c6a8001aad7d/jsSrc/subModules/ngForce-sfrquery.js#L47">sfrquery.query</a>,
+						<a href="https://github.com/noeticpenguin/ngForce/blob/955297bfdb525205f363345bea04c6a8001aad7d/jsSrc/subModules/ngForce-visualForceRemoting.js#L199">vfr.update</a>,
+						<a href="https://github.com/noeticpenguin/ngForce/blob/955297bfdb525205f363345bea04c6a8001aad7d/jsSrc/subModules/ngForce-sfr.js#L81">sfr.update</a>,
+						<a href="https://github.com/noeticpenguin/ngForce/blob/8eb08f59c58ce0299b9d985e51188d0163c07e90/src/classes/ngForceController_TEST.cls#L232">vfr.bulkUpdate</a>,
+						<a href="https://github.com/noeticpenguin/ngForce/blob/8eb08f59c58ce0299b9d985e51188d0163c07e90/src/classes/ngForceController_TEST.cls#L232">vfr.bulkUpdate</a>
+					</p>
+				</div>
+				<div class="comparison-review panel-body">
+					<p>
+						The the <code>sfr.update</code> operation is familiar, as it's the same as ForceTK. Besides that, the methods are quite unusual. The <code>vfr.update</code> operation is completely different from the <code>srf.update</code> operation, despite both doing the same thing.
+					</p>
+					<p>
+						How can we do multiple records in ngForce? It provides the we have to use the <code>vfr.bulkCreate</code> and <code>vfr.bulkUpdate</code> operations, but it doesn't provide a similar method on the REST API. If you do choose to use these "bulk" methods, they are quite difficult to correctly use, as documented in the project's <a href="https://github.com/noeticpenguin/ngForce">README file</a>:
+						<pre>
+var dataRows = {};
+for(var i=0; i &lt; 12; i++) {
+    dataRows[i] = {'propA': 3, 'End_date__c': new Date()};
+}
+
+vfr.bulkCreate('objectName__c', dataRows);
+
+// So, `dataRows` is a numerically keyed object of objects, like:
+{
+    "0":{"propA":3,"End_date__c":"2013-08-21T11:29:27.365Z"},
+    "1":{"propA":3,"End_date__c":"2013-08-21T11:29:27.365Z"},
+    ...
+}
+						</pre>
+						<br/>
+						Whaaa-? That's not a method I want to use. So, while ngForce <em>does</em> provide bulk operations, they are so ridiculous that I really don't want to use them.
+					</p>
+					<h4>Problems:</h4>
+					<ul>
+						<li>Crazy method signatures</li>
+					</ul>
+				</div>
+			</div>
+			<hr/>
+			<div class="comparison panel panel-default">
+				<p class="comparison-name panel-heading">JSforce</p>
+				<div class="comparison-examples panel-body">
+					<pre>
+var conn = new jsforce.Connection({
+  serverUrl : 'https://na1.salesforce.com',
+  sessionId : '{&#33;$Api.Session_ID}'
+});
+
+conn.query("SELECT Id, Name FROM Account", function(err, result) {
+  if (err) { return console.error(err); }
+  console.log("total : " + result.totalSize);
+  console.log("fetched : " + result.records.length);
+});
+
+conn.sobject("Account").update([
+  { Id : '0017000000hOMChAAO', Name : 'Updated Account #1' },
+  { Id : '0017000000iKOZTAA4', Name : 'Updated Account #2' }
+]);
+					</pre>
+					<p>
+						Sources:
+						<a href="https://jsforce.github.io/document/#query">Connection.query</a>,
+						<a href="https://jsforce.github.io/document/#update">SObject.update</a>
+					</p>
+				</div>
+				<div class="comparison-review panel-body">
+					<p>
+						JSForce has, by far, the best-designed methods for connecting to Salesforce. It supports callbacks <em>and</em> promises, has signatures similar to Apex for CRUD operations, and has a ton of other SFDC API stuff ready-to-go.
+					</p>
+					<p>
+						While JSForce's features and design is nearly perfect, I'm turned off by its sheer size. Look at the <a href="http://jsforce.github.io/jsforce/doc/">docs</a> - it includes nearly every SFDC API, which is a lot. When I'm making a simple, in-browser CRUD app, I don't want to send a full library to my users.
+					</p>
+					<p>
+						Also, JSForce includes an OAuth flow implementation, authentication management, and transport layer, on which its other features are based. While this provides an easy on-ramp to new users of the tool, AngularJS apps prefer to manage authentication via its own transport layer, the <code>$http</code> service and its interceptors.
+					</p>
+					<h4>Problems:</h4>
+					<ul>
+						<li>Large library</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</apex:page>

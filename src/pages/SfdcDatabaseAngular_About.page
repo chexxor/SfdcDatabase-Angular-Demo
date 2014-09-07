@@ -1,0 +1,94 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
+
+	<style>
+	</style>
+
+	<div class="library-intro container">
+		<div class="jumbotron">
+			<h1>SfdcDatabase-Angular</h1>
+			<p>A simple tool for building Salesforce-backed AngularJS apps.</p>
+			<p></p>
+		</div>
+	</div>
+	<div class="library-features">
+		<div class="row">
+			<div class="col-lg-6">
+				<h3>Apex-like methods</h3>
+				<div>
+					<pre>
+// CRUD like Apex.
+sfdc.query(soql);
+sfdc.insert(records);
+sfdc.update(records);
+					</pre>
+				</div>
+				<h3>Bulkified</h3>
+				<div>
+					<pre>
+// Update one record...
+sfdc.update(record);
+
+// ...or many.
+sfdc.update(records);
+					</pre>
+				</div>
+				<h3>REST or JSR - same method</h3>
+				<div>
+					<pre>
+// Use the default, REST,...
+sfdc.query(soql);
+
+// ...or use JSR.
+sfdc.insert(records, undefined, { useJsr: true });
+					</pre>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<h3>Plain JS objects</h3>
+				<div>
+					<pre>
+// Get plain objects...
+sfdc.query(soql).then(function(records) {
+  /* Receive:
+  [{
+    Name: 'Test Co',
+    AccountRevenue: 6000
+  }, ... ];
+  */
+});
+
+// ...send plain objects.
+var account = {
+  Name: 'Test Co',
+  AccountRevenue: 5000
+};
+account.AccountRevenue = 6000;
+sfdc.update(account);
+					</pre>
+				</div>
+				<h3>Configuration everywhere</h3>
+				<div>
+					<pre>
+// Global...
+angular.module('yourApp')
+  .config(function(sfdcAngularConfigProvider) {
+    sfdcAngularConfigProvider.apiVersion = 'v31.0';
+    sfdcAngularConfigProvider.transportFlagsDefault = { useJsr: false };
+  });
+
+// ...or ad-hoc.
+var $httpConfig = { cache: true };
+sfdc.query(soql, $httpConfig);
+					</pre>
+				</div>
+				<!-- <h3>JSR via $http (for fun)</h3>
+				<div>
+					<pre>
+sfdc.insert(records, undefined, { useJsr: true, via$Http: true });
+					</pre>
+				</div> -->
+			</div>
+		</div>
+	</div>
+
+</apex:page>

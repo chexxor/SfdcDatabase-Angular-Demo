@@ -1,0 +1,9 @@
+<apex:component controller="sfdcDatabaseCtlr">
+<script type="text/javascript">
+window.sfdcDatabaseConfig = {
+	REMOTE_ACTION_QUERY: '{!$RemoteAction.sfdcDatabaseCtlr.quer}',
+	REMOTE_ACTION_UPDATE: '{!$RemoteAction.sfdcDatabaseCtlr.updat}',
+	REMOTE_ACTION_INSERT: '{!$RemoteAction.sfdcDatabaseCtlr.inser}'
+};
+</script>>
+</apex:component>
