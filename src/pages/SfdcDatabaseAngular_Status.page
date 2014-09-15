@@ -6,7 +6,7 @@
 		</div>
 		<div class="project-status">
 			<p>
-				The "SFDC Database for Angular" project is an <strong>early preview</strong>. It is shared in this state to show the project's status and goals. It doesn't have tests written, so it probably isn't ready for you to easily plug-and-play quite yet. You are, however, welcome to try it out and help out.
+				The "SFDC Database for Angular" project is a <strong>preview</strong>. It is shared in this state to show the project's status and goals. It doesn't have tests written, so it probably isn't ready for you to easily plug-and-play quite yet. You are, however, welcome to try it out and help out.
 			</p>
 			<p>
 				It will likely see some re-structuring to move functions and responsibilities between modules, but the method signatures shouldn't change too much, as that's the goal of this project.

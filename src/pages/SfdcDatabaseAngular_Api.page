@@ -1,17 +1,15 @@
 <apex:page showHeader="false" sidebar="false" standardStylesheets="false" docType="html-5.0">
 
-	<style>
-	</style>
-
 	<div class="page-header">
 		<div>
 			<h3>Methods</h3>
+			<p>The API should be what you expect. If there are any difficulties, they will lie in setup, such as installing the custom REST endpoint or resolving network/proxy issues.</p>
 		</div>
 		<div class="function-doc">
 			<div class="function-intro">
-				<p class="function-signature"><code>sfdc.insert(records, restOrJsrConfig, transportFlags);</code></p>
+				<p class="function-signature" id="sfdc-insert"><code>sfdc.insert(records, restOrJsrConfig, transportFlags);</code></p>
 				<div class="function-examples">
-					<pre>
+					<pre><code class="language-javascript">
 var account = {
 	Name: 'Test Co',
 	AccountRevenue: 5000,
@@ -26,13 +24,13 @@ sfdc.insert(account, { cache: true });
 
 // Customize JavaScript Remoting config if using JSR.
 sfdc.insert(account, { buffer: false }, { useJsr: true });
-					</pre>
+					</code></pre>
 				</div>
 			</div>
 			<div class="function-intro">
-				<p class="function-signature"><code>sfdc.update(records, restOrJsrConfig, transportFlags);</code></p>
+				<p class="function-signature" id="sfdc-update"><code>sfdc.update(records, restOrJsrConfig, transportFlags);</code></p>
 				<div class="function-examples">
-					<pre>
+					<pre><code class="language-javascript">
 var account = {
 	Id: '001abc820dfjfd2',
 	Name: 'Test Co',
@@ -45,13 +43,13 @@ sfdc.update(account, { cache: true });
 
 // Customize JavaScript Remoting config if using JSR.
 sfdc.update(account, { buffer: false }, { useJsr: true });
-					</pre>
+					</code></pre>
 				</div>
 			</div>
 			<div class="function-intro">
-				<p class="function-signature"><code>sfdc.delete(records, restOrJsrConfig, transportFlags);</code></p>
+				<p class="function-signature" id="sfdc-delete"><code>sfdc.delete(records, restOrJsrConfig, transportFlags);</code></p>
 				<div class="function-examples">
-					<pre>
+					<pre><code class="language-javascript">
 var account = {
 	Id: '001abc820dfjfd2',
 	Name: 'Test Co',
@@ -63,13 +61,13 @@ sfdc.delete(account, { cache: true });
 
 // Customize JavaScript Remoting config if using JSR.
 sfdc.delete(account, { buffer: false }, { useJsr: true });
-					</pre>
+					</code></pre>
 				</div>
 			</div>
 			<div class="function-intro">
-				<p class="function-signature"><code>sfdc.query(soql, restOrJsrConfig, transportFlags);</code></p>
+				<p class="function-signature" id="sfdc-query"><code>sfdc.query(soql, restOrJsrConfig, transportFlags);</code></p>
 				<div class="function-examples">
-					<pre>
+					<pre><code class="language-javascript">
 var accountSoql = "SELECT Id, Name, AccountRevenue" +
 	" FROM Account" +
 	" ORDER BY LastModifiedDate";
@@ -79,11 +77,15 @@ sfdc.query(accountSoql, { cache: true });
 
 // Customize JavaScript Remoting config if using JSR.
 sfdc.query(accountSoql, { buffer: false }, { useJsr: true });
-					</pre>
+					</code></pre>
 				</div>
 			</div>
 			<br/>
 		</div>
 	</div>
+	<script type="text/javascript">
+		// Put this in the template so it runs whenever this template is loaded.
+		Prism.highlightAll();
+	</script>
 
 </apex:page>

@@ -13,7 +13,7 @@
 				<p>
 					If <code>useJsr</code> is false, the Salesforce REST API is used, otherwise JavaScript Remoting is used. If <code>use$Http</code> is true, the request passes through Angular's $http service rather than through the Salesforce-provided <code>VisualforceRemoting.Manager</code>, which is kinda fun.
 				</p>
-
+				<br/>
 				<div class="input-group text-center center-block">
 					<h4>Transport flags</h4>
 					<div class="checkbox-inline">

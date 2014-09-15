@@ -13,9 +13,9 @@
 			</p>
 			<hr/>
 			<div class="comparison panel panel-default">
-				<p class="comparison-name panel-heading">ForceTK (Force.com-JavaScript-REST-Toolkit)</p>
+				<p class="comparison-name panel-heading text-center">ForceTK (Force.com-JavaScript-REST-Toolkit)</p>
 				<div class="comparison-examples panel-body">
-					<pre>
+					<pre><code class="language-javascript">
 var client = new forcetk.Client();
 client.setSessionToken('{&#33;$Api.Session_ID}');
 
@@ -24,14 +24,14 @@ client.query("SELECT Name FROM Account LIMIT 1", function(response){
 });
 
 client.update('Account', id, fields, updateCallback, errorCallback);
-					</pre>
+					</code></pre>
 					<p>
 						Sources:
 						<a href="https://github.com/developerforce/Force.com-JavaScript-REST-Toolkit/blob/1f60e0f4a6c48a45870c772f7aa9f96585f156af/app.js#L64">client.query</a>,
 						<a href="https://github.com/developerforce/Force.com-JavaScript-REST-Toolkit/blob/1f60e0f4a6c48a45870c772f7aa9f96585f156af/app.js#L190">client.update</a>
 					</p>
 				</div>
-				<div class="comparison-review panel-body">
+				<div class="comparison-review panel-body text-center">
 					<p>
 						ForceTK is the original JavaScript SFDC toolkit. It performs its job well, which is proxying to SFDC REST API endpoints via the proxy built-in to the VisualForce platform. Sadly, that's its only feature. If app is not hosted by Visualforce, you can use a drop-in replacement for the VF proxy written in PHP.
 					</p>
@@ -47,9 +47,9 @@ client.update('Account', id, fields, updateCallback, errorCallback);
 			</div>
 			<hr/>
 			<div class="comparison panel panel-default">
-				<p class="comparison-name panel-heading">ngForce</p>
+				<p class="comparison-name panel-heading text-center">ngForce</p>
 				<div class="comparison-examples panel-body">
-					<pre>
+					<pre><code class="language-javascript">
 // (Auth token is injected to request elsewhere)
 
 vfr.query("SELECT Name FROM Account LIMIT 1"); // Remoting
@@ -57,7 +57,7 @@ sfrquery.query("SELECT Name FROM Account LIMIT 1", cacheEnabled); // REST
 
 vfr.update('Account', id, fields); // Remoting
 sfr.update('Account', record); // REST
-					</pre>
+					</code></pre>
 					<p>
 						Sources:
 						<a href="https://github.com/noeticpenguin/ngForce/blob/8eb08f59c58ce0299b9d985e51188d0163c07e90/src/classes/ngForceController.cls#L511">vfr.query</a>,
@@ -74,7 +74,7 @@ sfr.update('Account', record); // REST
 					</p>
 					<p>
 						How can we do multiple records in ngForce? It provides the we have to use the <code>vfr.bulkCreate</code> and <code>vfr.bulkUpdate</code> operations, but it doesn't provide a similar method on the REST API. If you do choose to use these "bulk" methods, they are quite difficult to correctly use, as documented in the project's <a href="https://github.com/noeticpenguin/ngForce">README file</a>:
-						<pre>
+						<pre><code class="language-javascript">
 var dataRows = {};
 for(var i=0; i &lt; 12; i++) {
     dataRows[i] = {'propA': 3, 'End_date__c': new Date()};
@@ -88,7 +88,7 @@ vfr.bulkCreate('objectName__c', dataRows);
     "1":{"propA":3,"End_date__c":"2013-08-21T11:29:27.365Z"},
     ...
 }
-						</pre>
+						</code></pre>
 						<br/>
 						Whaaa-? That's not a method I want to use. So, while ngForce <em>does</em> provide bulk operations, they are so ridiculous that I really don't want to use them.
 					</p>
@@ -100,9 +100,9 @@ vfr.bulkCreate('objectName__c', dataRows);
 			</div>
 			<hr/>
 			<div class="comparison panel panel-default">
-				<p class="comparison-name panel-heading">JSforce</p>
+				<p class="comparison-name panel-heading text-center">JSforce</p>
 				<div class="comparison-examples panel-body">
-					<pre>
+					<pre><code class="language-javascript">
 var conn = new jsforce.Connection({
   serverUrl : 'https://na1.salesforce.com',
   sessionId : '{&#33;$Api.Session_ID}'
@@ -118,7 +118,7 @@ conn.sobject("Account").update([
   { Id : '0017000000hOMChAAO', Name : 'Updated Account #1' },
   { Id : '0017000000iKOZTAA4', Name : 'Updated Account #2' }
 ]);
-					</pre>
+					</code></pre>
 					<p>
 						Sources:
 						<a href="https://jsforce.github.io/document/#query">Connection.query</a>,
@@ -144,5 +144,10 @@ conn.sobject("Account").update([
 
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		// Put this in the template so it runs whenever this template is loaded.
+		Prism.highlightAll();
+	</script>
 
 </apex:page>

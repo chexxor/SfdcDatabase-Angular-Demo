@@ -1,7 +1,16 @@
 /* app css stylesheet */
 
+pre code {
+    font-size: large;
+}
+
+body {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
 .container {
-    width: 800px;
+    width: 1000px;
 }
 .menu {
     list-style: none;
@@ -68,8 +77,15 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 
 /* end prettyJson */
 
+/* PrismJS */
+.token.operator {
+    /* The default operator has a goofy background. */
+    background-color: #272822;
+}
 
-/*  */
+/* end PrismJS*/
+
+/* Comparison */
 
 .comparison-name {
     font-size: large;
@@ -78,7 +94,7 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .comparison-review {
     /*margin-top: 20px;*/
 }
-
+/* end Comparison */
 
 /* Http Log */
 

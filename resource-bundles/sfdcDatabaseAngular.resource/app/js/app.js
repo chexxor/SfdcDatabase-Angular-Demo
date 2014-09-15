@@ -70,11 +70,11 @@ angular.module('myApp', [
 		$httpProvider.interceptors.push('sfdcHttpForceSitesRewriter');
 		$httpProvider.interceptors.push('sfdcHttpAuthHeader'); // Must be after proxy interceptor.
 	}
-]).
-config(function($logProvider) {
+])
+.config(function($logProvider) {
 	$logProvider.debugEnabled(false);
-}).
-config(['$routeProvider',
+})
+.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.when('/about', {
 			templateUrl: '/apex/SfdcDatabaseAngular_About',
@@ -125,7 +125,7 @@ run(['$rootScope', '$log', '$timeout', 'sfdc', 'AccountState', 'sfdcHttpAuthHead
 		});
 		*/
 		$rootScope.$on('$routeChangeError', function() {
-			console.log('Changing route...', arguments);
+			$log.log('Changing route...', arguments);
 		});
 	}
 ]);

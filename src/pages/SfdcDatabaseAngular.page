@@ -15,12 +15,14 @@
         <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/html5-boilerplate/css/main.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/html5-boilerplate/css/normalize.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/bootstrap/dist/css/bootstrap.min.css')}" />
-        <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/css/app.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/css/sticky-footer.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/trNgGrid/release/trNgGrid.min.css')}" />
         <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/angular-xeditable/dist/css/xeditable.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/prism/themes/prism.css')}" />
+        <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/prism/themes/prism-okaidia.css')}" />
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/html5-boilerplate/js/vendor/modernizr-2.6.2.min.js')}" />
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/lodash/dist/lodash.min.js')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/css/app.css')}" />
     </head>
 
     <body ng-controller="BodyCtrl">
@@ -90,7 +92,7 @@
 
             </div>
 
-            <div ng-view="true" style="width: 800px;"></div>
+            <div ng-view="true" style="width: 1000px;"></div>
 
         </div>
 
@@ -134,13 +136,14 @@
 
         <div class="footer">
             <div class="container">
-                <!-- <p class="text-muted">Place sticky footer content here.</p> -->
-
                 <div class="text-muted pull-left">Version:
                     <span app-version="appVersion"></span>
                 </div>
             </div>
         </div>
+
+        <!-- Non-essential scripts. -->
+        <script src="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/prism/prism.js')}"/>
 
     </body>
 

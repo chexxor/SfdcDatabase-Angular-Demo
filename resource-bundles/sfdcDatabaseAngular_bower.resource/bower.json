@@ -16,6 +16,7 @@
         "html5-boilerplate": "~4.3.0",
         "lodash": "~2.4.1",
         "trNgGrid": "MoonStorm/trNgGrid#~3.0.2",
-        "angular-xeditable": "~0.1.8"
+        "angular-xeditable": "~0.1.8",
+        "prism": "LeaVerou/prism#f2984edbb951d8622db2a8ce7720be15a4625605"
     }
 }
