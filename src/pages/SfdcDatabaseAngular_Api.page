@@ -49,6 +49,24 @@ sfdc.update(account, { buffer: false }, { useJsr: true });
 				</div>
 			</div>
 			<div class="function-intro">
+				<p class="function-signature"><code>sfdc.delete(records, restOrJsrConfig, transportFlags);</code></p>
+				<div class="function-examples">
+					<pre>
+var account = {
+	Id: '001abc820dfjfd2',
+	Name: 'Test Co',
+};
+sfdc.delete(account);
+
+// Customize $http config if using REST
+sfdc.delete(account, { cache: true });
+
+// Customize JavaScript Remoting config if using JSR.
+sfdc.delete(account, { buffer: false }, { useJsr: true });
+					</pre>
+				</div>
+			</div>
+			<div class="function-intro">
 				<p class="function-signature"><code>sfdc.query(soql, restOrJsrConfig, transportFlags);</code></p>
 				<div class="function-examples">
 					<pre>
