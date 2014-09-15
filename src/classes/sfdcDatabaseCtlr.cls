@@ -14,4 +14,9 @@ global with sharing class sfdcDatabaseCtlr {
 	global static List<Database.SaveResult> inser(List<SObject> records) {
 		return Database.insert(records);
 	}
+
+	@remoteAction
+	global static List<Database.DeleteResult> delet(List<SObject> records) {
+		return Database.delete(records);
+	}
 }

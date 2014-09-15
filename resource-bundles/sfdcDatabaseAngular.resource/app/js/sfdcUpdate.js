@@ -12,15 +12,11 @@ angular.module('sfdcDatabase')
 			state,
 			appConfig,
 			sfdcSchema,
-			vfrConfig,
+			jsrConfig,
 			utils,
 			config,
 			jsrInvoke,
 			jsrInvokeCustom;
-
-		function recordsFromQueryResponse(response) {
-			return response.data && response.data.records;
-		}
 
 		function recordsFromCrudResponse(response) {
 			return response.data && response.data.records;
@@ -103,7 +99,7 @@ angular.module('sfdcDatabase')
 			});
 
 			// return jsrInvokeCustom('sfdcDatabaseCtlr', 'updat', records);
-			return jsrInvoke(appConfig.sfdcEndpoints.REMOTE_ACTION_UPDATE,
+			return jsrInvokeCustom(appConfig.sfdcEndpoints.REMOTE_ACTION_UPDATE,
 				records,
 				jsrConfig);
 		}
@@ -174,7 +170,7 @@ angular.module('sfdcDatabase')
 
 			var pResult;
 			if (doesJsrExist() && transportFlags.useJsr) {
-				if (transportFlags.vfrVia$Http) {
+				if (transportFlags.jsrVia$Http) {
 					pResult = jsrUpdateCustom(records_, restOrJsrConfig);
 				} else {
 					pResult = jsrUpdate(records_, restOrJsrConfig);
@@ -188,8 +184,8 @@ angular.module('sfdcDatabase')
 		}
 
 		return {
-			$get: ['$http', '$q', '$rootScope', '$log', 'sfdcDatabaseState', 'sfdcSchema', 'vfrConfig', 'sfdcDatabaseUtils', 'sfdcDatabaseConfig', 'jsrInvokeCustom', 'jsrInvoke',
-				function(_$http_, _$q_, _$rootScope_, _$log_, sfdcDatabaseState, _sfdcSchema_, _vfrConfig_, sfdcDatabaseUtils, sfdcDatabaseConfig, _jsrInvokeCustom_, _jsrInvoke_) {
+			$get: ['$http', '$q', '$rootScope', '$log', 'sfdcDatabaseState', 'sfdcSchema', 'jsrConfig', 'sfdcDatabaseUtils', 'sfdcDatabaseConfig', 'jsrInvokeCustom', 'jsrInvoke',
+				function(_$http_, _$q_, _$rootScope_, _$log_, sfdcDatabaseState, _sfdcSchema_, _jsrConfig_, sfdcDatabaseUtils, sfdcDatabaseConfig, _jsrInvokeCustom_, _jsrInvoke_) {
 					$http = _$http_;
 					$q = _$q_;
 					$rootScope = _$rootScope_;
@@ -197,7 +193,7 @@ angular.module('sfdcDatabase')
 					state = sfdcDatabaseState;
 					appConfig = sfdcDatabaseConfig;
 					sfdcSchema = _sfdcSchema_;
-					vfrConfig = _vfrConfig_;
+					jsrConfig = _jsrConfig_;
 					utils = sfdcDatabaseUtils;
 					jsrInvoke = _jsrInvoke_;
 					jsrInvokeCustom = _jsrInvokeCustom_;

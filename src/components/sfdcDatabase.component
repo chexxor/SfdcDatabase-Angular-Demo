@@ -3,7 +3,8 @@
 window.sfdcDatabaseConfig = {
 	REMOTE_ACTION_QUERY: '{!$RemoteAction.sfdcDatabaseCtlr.quer}',
 	REMOTE_ACTION_UPDATE: '{!$RemoteAction.sfdcDatabaseCtlr.updat}',
-	REMOTE_ACTION_INSERT: '{!$RemoteAction.sfdcDatabaseCtlr.inser}'
+	REMOTE_ACTION_INSERT: '{!$RemoteAction.sfdcDatabaseCtlr.inser}',
+	REMOTE_ACTION_DELETE: '{!$RemoteAction.sfdcDatabaseCtlr.delet}'
 };
 </script>>
 </apex:component>

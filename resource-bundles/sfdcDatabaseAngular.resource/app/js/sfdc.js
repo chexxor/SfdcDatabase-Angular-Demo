@@ -23,8 +23,8 @@ angular.module('sfdcDatabase', [])
 		}
 
 		return {
-			$get: ['$http', '$log', 'sfdcDatabaseState', 'sfdcDatabaseConfig', 'sfdcQuery', 'sfdcInsert', 'sfdcUpdate',
-				function(_$http_, _$log_, sfdcDatabaseState, sfdcDatabaseConfig, sfdcQuery, sfdcInsert, sfdcUpdate) {
+			$get: ['$http', '$log', 'sfdcDatabaseState', 'sfdcDatabaseConfig', 'sfdcQuery', 'sfdcInsert', 'sfdcUpdate', 'sfdcDelete',
+				function(_$http_, _$log_, sfdcDatabaseState, sfdcDatabaseConfig, sfdcQuery, sfdcInsert, sfdcUpdate, sfdcDelete) {
 
 					$http = _$http_;
 					$log = _$log_;
@@ -39,7 +39,8 @@ angular.module('sfdcDatabase', [])
 					return {
 						query: sfdcQuery,
 						insert: sfdcInsert,
-						update: sfdcUpdate
+						update: sfdcUpdate,
+						delete: sfdcDelete
 					};
 				}
 			]

@@ -21,7 +21,6 @@ angular.module('sfdcDatabase')
 				} else {
 					dReturnVal.reject('JS Remoting Error:' + jsrEvent.message, returnVal);
 				}
-				$log.log('Handling jsr response:', $rootScope.$$phase);
 				if (!$rootScope.$$phase) $rootScope.$apply();
 			};
 		}
@@ -30,7 +29,7 @@ angular.module('sfdcDatabase')
 			var config = utils.extend(appConfig.jsrConfigDefault, configUser);
 			var dReturnVal = $q.defer();
 			var jsrDataHandler = jsrDataHandlerFactory(dReturnVal, $rootScope);
-			state.vfrTransactionCounter++;
+			state.jsrTransactionCounter++;
 			Visualforce.remoting.Manager.invokeAction(
 				remoteAction,
 				params,

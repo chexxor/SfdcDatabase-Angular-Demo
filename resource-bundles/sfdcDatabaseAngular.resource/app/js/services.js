@@ -23,40 +23,74 @@ angular.module('myApp.services', [])
 		// svc.errors = 
 	}
 }])
+.service('TransportFlags', [function() {
+	var svc = this;
+	svc.useJsr = true;
+	svc.jsrVia$Http = false;
+}])
 .service('AccountState', ['$log', 'sfdc',
 	function($log, sfdc) {
-		var self = this;
+		var svc = this;
 		var accountSoql =
 			'SELECT Id, Name, AnnualRevenue__c, Phone__c, Description__c ' +
-			// '(SELECT Id, Name FROM Test\Objs__r)' +
+			// '(SELECT Id, Name FROM TestObjs__r)' +
 			// ' FROM Account' +
 			' FROM Account__c' +
-			' WHERE AnnualRevenue__c > 0' +
 			' LIMIT 5';
 
-		self.mruAccounts = [];
-		self.gridOptions = {};
+		svc.mruAccounts = [];
+		svc.gridOptions = {};
+
+		svc.updateAccount = function(account, transportFlags) {
+			return sfdc.update(account, undefined, transportFlags).then(function(records) {
+				$log.log('Update success: ', records);
+			}).catch(function(err) {
+				$log.error('Error updating Account:', err);
+			});
+		};
+
+		svc.addAccount = function(newAccount, transportFlags) {
+			var newAccount_ = {
+				Name: '',
+				AnnualRevenue__c: 0,
+				Phone__c: '',
+				attributes: {
+					type: 'Account__c'
+				}
+			};
+			angular.extend(newAccount, newAccount_);
+
+			return sfdc.insert(newAccount, undefined, transportFlags).then(function(records) {
+				$log.log('Insert success:', records);
+				newAccount.Id = records[0].id;
+				svc.mruAccounts.push(newAccount);
+			}).catch(function(err) {
+				$log.error('Error inserting Account:', err);
+			});
+		};
+
+		svc.deleteAccount = function(record, transportFlags) {
+			return sfdc.delete(record, undefined, transportFlags).then(function(records) {
+				$log.log('Delete success:', records);
+				var indexToRemove = _.pluck(svc.mruAccounts, 'Id').indexOf(records[0].id);
+				if (indexToRemove == -1) {
+					return;
+				}
+				var removedItems = svc.mruAccounts.splice(indexToRemove, 1);
+				return removedItems;
+			}).catch(function(err) {
+				$log.error('Error deleting Account:', err);
+			});
+		};
 
 		sfdc.query(accountSoql, undefined, {
 			useJsr: true
 		}).then(function(accounts) {
-			angular.copy(accounts, self.mruAccounts);
+			angular.copy(accounts, svc.mruAccounts);
 		});
-		// sfdc.query(accountSoql, undefined, {
-		// 	useJsr: true,
-		// 	vfrVia$Http: true
-		// }).then(function(accounts) {
-		// 	angular.copy(accounts, self.mruAccounts);
-		// });
-
-		// sfdc.query(accountSoql, undefined, {
-		// 	useJsr: false
-		// }).then(function(accounts) {
-		// 	angular.copy(accounts, self.mruAccounts);
-		// });
 
 
-		self.gridOptions = {
+		svc.gridOptions = {
 			data: 'accounts',
 			enableCellSelection: true,
 			enableRowSelection: false,

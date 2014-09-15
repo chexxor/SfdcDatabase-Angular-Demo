@@ -3,16 +3,18 @@
 var Visualforce = Visualforce;
 
 angular.module('sfdcDatabase')
-	.provider('sfdcInsert', function() {
+	.provider('sfdcDelete', function() {
 
 		var $http,
 			$q,
 			$rootScope,
 			$log,
-			utils,
-			appState,
+			state,
 			appConfig,
 			sfdcSchema,
+			jsrConfig,
+			utils,
+			config,
 			jsrInvoke,
 			jsrInvokeCustom;
 
@@ -30,10 +32,10 @@ angular.module('sfdcDatabase')
 				method: 'GET'
 			}).then(function(res) {
 				$log.log('Sobject REST Resource verified.');
-				appState.hasSobjectRestResource = true;
+				appConfig.hasSobjectRestResource = true;
 			}, function(err) {
 				$log.log('No Sobject REST Resource.');
-				appState.hasSobjectRestResource = false;
+				appConfig.hasSobjectRestResource = false;
 			});
 		}
 
@@ -46,19 +48,19 @@ angular.module('sfdcDatabase')
 		}
 
 		function hasSobjectRest() {
-			return appState.hasSobjectRestResource;
+			return appConfig.hasSobjectRestResource;
 		}
 
 		function readonlyFields(table) {
-			// !!! Find a good way to find a table's un-updateable fields.
+			// !!! Find good way to find a table's undeleteable fields.
 			return [
-				'Id'
+				// 'Id'
 			];
 		}
 
 		// Function implementations.
 
-		function jsrInsert(records, configUser) {
+		function jsrDelete(records, configUser) {
 			var jsrConfig = utils.extend(utils.extend(appConfig.jsrConfigDefault, configUser), {
 				params: {
 					records: records
@@ -68,78 +70,79 @@ angular.module('sfdcDatabase')
 			records.forEach(function(r) {
 				// JS Remoting uses the `Id` and `sObjectType` properties
 				//   to determine the sObject's type.
-				var sObjectType = r.attributes && r.attributes.type;
+				var sObjectType = sfdcSchema.sObjectNameFromId(r.Id);
 				if (sObjectType) {
 					r.sObjectType = sObjectType;
 				}
-				// Remove fields which can't be updated.
-				utils.omit(r, readonlyFields(sObjectType).concat(['attributes']));
-			});
-
-			return jsrInvoke(appConfig.sfdcEndpoints.REMOTE_ACTION_INSERT,
-				records,
-				jsrConfig).then(recordsFromCrudResponse);
-		}
-
-		function jsrInsertCustom(records, configUser) {
-			var jsrConfig = utils.extend(utils.extend(appConfig.jsrConfigDefault, configUser), {
-				params: {
-					records: records
-				}
-			});
-
-			records.forEach(function(r) {
-				// JS Remoting uses the `Id` and `sObjectType` properties
-				//   to determine the sObject's type.
-				var sObjectType = r.attributes && r.attributes.type;
-				if (sObjectType) {
-					r.sObjectType = sObjectType;
-				}
-				// Remove fields which can't be inserted.
+				// Remove fields which can't be deleted.
 				utils.omit(r, readonlyFields(r.sObjectType).concat(['attributes']));
 			});
 
-			// return jsrInvokeCustom('sfdcDatabaseCtlr', 'inser', records);
-			return jsrInvokeCustom(appConfig.sfdcEndpoints.REMOTE_ACTION_INSERT,
+			return jsrInvoke(appConfig.sfdcEndpoints.REMOTE_ACTION_DELETE,
 				records,
 				jsrConfig).then(recordsFromCrudResponse);
 		}
 
-		function restInsertBulk(records, configUser) {
+		function jsrDeleteCustom(records, configUser) {
+			var jsrConfig = utils.extend(utils.extend(appConfig.jsrConfigDefault, configUser), {
+				params: {
+					records: records
+				}
+			});
+
+			records.forEach(function(r) {
+				// JS Remoting uses the `Id` and `sObjectType` properties
+				//   to determine the sObject's type.
+				var sObjectType = sfdcSchema.sObjectNameFromId(r.Id);
+				if (sObjectType) {
+					r.sObjectType = sObjectType;
+				}
+				// Remove fields which can't be deleted.
+				utils.omit(r, readonlyFields(r.sObjectType).concat(['attributes']));
+			});
+
+			// return jsrInvokeCustom('sfdcDatabaseCtlr', 'delet', records);
+			return jsrInvokeCustom(appConfig.sfdcEndpoints.REMOTE_ACTION_DELETE,
+				records,
+				jsrConfig).then(recordsFromCrudResponse);
+		}
+
+		function restDeleteCustom(records, configUser) {
 			// var records_ = removeReadonlyFields(records);
 			records.forEach(function(r) {
-				// Remove fields which can't be updated.
-				var table = r.attributes.type;
-				r.sObjectType = table;
+				// Remove fields which can't be deleted.
 				// utils.omit(r, readonlyFields(table).concat(['attributes']));
 				utils.omit(r, [].concat(['attributes']));
 			});
 			var config = utils.extend(utils.extend({
 				url: appConfig.restSobjectResourceUrl,
-				method: 'POST'
+				method: 'DELETE'
 			}, configUser), {
+				// data: {
+				//	records: records
+				// }
 				data: records
 			});
 			return $http(config).then(recordsFromCrudResponse);
 		}
 
-		function restInsertSingle(records, configUser) {
-			// var config = utils.extend(utils.extend(restConfigInsertDefault, configUser), {
+		function restDeleteVanilla(records, configUser) {
+			// var config = utils.extend(utils.extend(restConfigDeleteDefault, configUser), {
 			//	params: {
 			//		records: records
 			//	}
 			// });
 			// return $http(config, records).then(recordsFromCrudResponse);
-			// Example: /services/data/v29.0/sobjects/Account
+			// Example: /services/data/v29.0/sobjects/Account/001C000000xQbd8IAC
 			var pResponses = records.map(function(r) {
-				var table = r.attributes.type,
- 					url = '/services/data/' + appConfig.apiVersion + '/sobjects/' + table;
+				var table = (r.attributes && r.attributes.type) || sfdcSchema.sObjectNameFromId(r.Id),
+					url = (r.attributes && r.attributes.url) || '/services/data/' + appConfig.apiVersion + '/sobjects/' + table + '/' + r.Id;
 
-				// Remove fields which can't be updated.
+				// Remove fields which can't be deleted.
 				utils.omit(r, readonlyFields(table).concat(['attributes']));
 
 				return $http({
-					method: 'POST',
+					method: 'DELETE',
 					url: url,
 					data: r
 				}).then(recordsFromCrudResponse);
@@ -149,7 +152,7 @@ angular.module('sfdcDatabase')
 			});
 		}
 
-		function insert(records, restOrJsrConfig, transportFlagsUser) {
+		function delet(records, restOrJsrConfig, transportFlagsUser) {
 
 			// Guards
 			if (!records) {
@@ -163,6 +166,7 @@ angular.module('sfdcDatabase')
 				return true;
 			}
 
+			// ??? Can we move this closer to where it's necessary?
 			var records_ = angular.copy(records);
 
 			var transportFlags = utils.extend(appConfig.transportFlagsDefault, transportFlagsUser);
@@ -170,33 +174,38 @@ angular.module('sfdcDatabase')
 			var pResult;
 			if (doesJsrExist() && transportFlags.useJsr) {
 				if (transportFlags.jsrVia$Http) {
-					pResult = jsrInsertCustom(records_, restOrJsrConfig);
+					pResult = jsrDeleteCustom(records_, restOrJsrConfig);
 				} else {
-					pResult = jsrInsert(records_, restOrJsrConfig);
+					pResult = jsrDelete(records_, restOrJsrConfig);
 				}
 			} else if (hasSobjectRest()) {
-				pResult = restInsertBulk(records_, restOrJsrConfig);
+				pResult = restDeleteCustom(records_, restOrJsrConfig);
 			} else {
-				pResult = restInsertSingle(records_, restOrJsrConfig);
+				pResult = restDeleteVanilla(records_, restOrJsrConfig);
 			}
 			return pResult;
 		}
 
 		return {
-			$get: ['$http', '$q', '$rootScope', '$log', 'sfdcDatabaseUtils', 'sfdcDatabaseState', 'sfdcSchema', 'sfdcDatabaseConfig', 'jsrInvokeCustom', 'jsrInvoke',
-				function(_$http_, _$q_, _$rootScope_, _$log_, sfdcDatabaseUtils, sfdcDatabaseState, _sfdcSchema_, sfdcDatabaseConfig, _jsrInvokeCustom_, _jsrInvoke_) {
+			$get: ['$http', '$q', '$rootScope', '$log', 'sfdcDatabaseState', 'sfdcSchema', 'jsrConfig', 'sfdcDatabaseUtils', 'sfdcDatabaseConfig', 'jsrInvokeCustom', 'jsrInvoke',
+				function(_$http_, _$q_, _$rootScope_, _$log_, sfdcDatabaseState, _sfdcSchema_, _jsrConfig_, sfdcDatabaseUtils, sfdcDatabaseConfig, _jsrInvokeCustom_, _jsrInvoke_) {
 					$http = _$http_;
 					$q = _$q_;
 					$rootScope = _$rootScope_;
 					$log = _$log_;
-					utils = sfdcDatabaseUtils;
-					appState = sfdcDatabaseState;
+					state = sfdcDatabaseState;
 					appConfig = sfdcDatabaseConfig;
 					sfdcSchema = _sfdcSchema_;
+					jsrConfig = _jsrConfig_;
+					utils = sfdcDatabaseUtils;
 					jsrInvoke = _jsrInvoke_;
 					jsrInvokeCustom = _jsrInvokeCustom_;
 
-					return insert;
+					if (!hasSobjectRest()) {
+						checkSobjectRestResource();
+					}
+
+					return delet;
 				}
 			]
 		};

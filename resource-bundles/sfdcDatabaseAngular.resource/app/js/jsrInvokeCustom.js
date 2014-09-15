@@ -5,11 +5,11 @@ angular.module('sfdcDatabase')
 		
 		var $q,
 			$http,
-			vfrConfig,
+			jsrConfig,
 			state;
 
-		function vfrCustomErrors(vfrResponse) {
-			return vfrResponse.data.filter(function(r) {
+		function jsrCustomErrors(jsrResponse) {
+			return jsrResponse.data.filter(function(r) {
 				var hasError = false;
 				if (r.statusCode >= 200 && r.statusCode < 300) {
 				} else if (r.statusCode >= 400 && r.statusCode < 500) {
@@ -19,12 +19,12 @@ angular.module('sfdcDatabase')
 			});
 		}
 		
-		function normalizeVfrResponse(result) {
-			var normalizedResult = result.data;
+		function normalizeJsrResponse(result) {
+			var normalizedResult = result.data && result.data[0] && result.data[0].result;
 			return normalizedResult;
 		}
 
-		function normalizeVfrError(errorResponse) {
+		function normalizeJsrError(errorResponse) {
 			return errorResponse.map(function(r) {
 				return {
 					error: r.type + ': ' + r.message,
@@ -37,7 +37,7 @@ angular.module('sfdcDatabase')
 		function jsrInvokeCustom(remoteAction, methodData) {
 			var targetClass = remoteAction.split('.')[0],
 				targetMethod = remoteAction.split('.')[1];
-			var targetMethodConfig = vfrConfig.actions[targetClass].ms.filter(function(m) {
+			var targetMethodConfig = jsrConfig.actions[targetClass].ms.filter(function(m) {
 				return m.name == targetMethod;
 			})[0];
 			if (!targetMethodConfig) {
@@ -58,29 +58,29 @@ angular.module('sfdcDatabase')
 						csrf: targetMethodConfig.csrf,
 						ns: '',
 						ver: targetMethodConfig.ver,
-						vid: vfrConfig.vf.vid
+						vid: jsrConfig.vf.vid
 					},
 					data: [methodData],
 					method: targetMethod,
-					tid: ++state.vfrTransactionCounter,
+					tid: ++state.jsrTransactionCounter,
 					type: 'rpc'
 				},
 			}).then(function(response) {
-				var errorItems = vfrCustomErrors(response);
+				var errorItems = jsrCustomErrors(response);
 				if (errorItems.length > 0) {
-					return $q.reject(normalizeVfrError(errorItems));
+					return $q.reject(normalizeJsrError(errorItems));
 				}
-				return normalizeVfrResponse(response);
+				return normalizeJsrResponse(response);
 			});
 		}
 
 		return {
-			$get: ['$log', '$http', '$q', 'vfrConfig', 'sfdcDatabaseState',
-				function($log, _$http_, _$q_, _vfrConfig_, sfdcDatabaseState) {
+			$get: ['$log', '$http', '$q', 'jsrConfig', 'sfdcDatabaseState',
+				function($log, _$http_, _$q_, _jsrConfig_, sfdcDatabaseState) {
 
 				$http = _$http_;
 				$q = _$q_;
-				vfrConfig = _vfrConfig_;
+				jsrConfig = _jsrConfig_;
 				state = sfdcDatabaseState;
 
 				return jsrInvokeCustom;

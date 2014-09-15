@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('sfdcDatabase')
-	.service('vfrConfig', function() {
-		function vfrConfig() {
+	.service('jsrConfig', function() {
+		function jsrConfig() {
 			var scripts = document.getElementsByTagName('script');
 			var remotingProviderScripts = Array.prototype.filter.call(scripts, function(s) {
 				return s.innerHTML.indexOf('RemotingProviderImpl') != -1;
@@ -13,8 +13,8 @@ angular.module('sfdcDatabase')
 			// Parse the JSON config object.
 			return JSON.parse(remotingProviderScripts[0].innerHTML.match(/\{.*\}/)[0]);
 		}
-		if (!this.vfrConfig) {
-			this.vfrConfig = vfrConfig();
+		if (!this.jsrConfig) {
+			this.jsrConfig = jsrConfig();
 		}
-		return this.vfrConfig;
+		return this.jsrConfig;
 	});

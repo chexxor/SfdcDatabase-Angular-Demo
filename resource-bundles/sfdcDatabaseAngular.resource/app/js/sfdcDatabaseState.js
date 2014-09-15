@@ -6,11 +6,5 @@ angular.module('sfdcDatabase')
 		// `undefined` value means not yet checked.
 		this.hasSobjectRestResource;
 		this.sfdcSchema;
-		this.vfrTransactionCounter = 0;
-
-		// this.sfdcEndpoints = {
-		// 	REMOTE_ACTION_QUERY: $window.sfdcDatabaseConfig.REMOTE_ACTION_QUERY,
-		// 	REMOTE_ACTION_INSERT: $window.sfdcDatabaseConfig.REMOTE_ACTION_INSERT,
-		// 	REMOTE_ACTION_UPDATE: $window.sfdcDatabaseConfig.REMOTE_ACTION_UPDATE
-		// }
+		this.jsrTransactionCounter = 0;
 	}]);

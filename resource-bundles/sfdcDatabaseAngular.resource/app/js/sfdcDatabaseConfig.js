@@ -18,7 +18,8 @@ angular.module('sfdcDatabase')
 		config.sfdcEndpoints = {
 			// REMOTE_ACTION_QUERY: undefined,
 			// REMOTE_ACTION_INSERT: undefined,
-			// REMOTE_ACTION_UPDATE: undefined
+			// REMOTE_ACTION_UPDATE: undefined,
+			// REMOTE_ACTION_DELETE: undefined
 		};
 
 		config.restSobjectResource = {
@@ -51,7 +52,8 @@ angular.module('sfdcDatabase')
 				var sfdcEndpoints = {
 					REMOTE_ACTION_QUERY: $window.sfdcDatabaseConfig.REMOTE_ACTION_QUERY,
 					REMOTE_ACTION_INSERT: $window.sfdcDatabaseConfig.REMOTE_ACTION_INSERT,
-					REMOTE_ACTION_UPDATE: $window.sfdcDatabaseConfig.REMOTE_ACTION_UPDATE
+					REMOTE_ACTION_UPDATE: $window.sfdcDatabaseConfig.REMOTE_ACTION_UPDATE,
+					REMOTE_ACTION_DELETE: $window.sfdcDatabaseConfig.REMOTE_ACTION_DELETE
 				};
 
 				var restSobjectResource = {

@@ -109,13 +109,14 @@
         <!-- <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/trNgGrid/release/src/js/trNgGrid.js')}"/> -->
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular_bower, 'bower_components/angular-xeditable/dist/js/xeditable.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdc.js')}"/>
-        <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/vfrConfig.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/jsrConfig.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcDatabaseConfig.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcDatabaseUtils.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcDatabaseState.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcSchema.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcInsert.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcUpdate.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcDelete.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/sfdcQuery.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/jsrInvoke.js')}"/>
         <apex:includeScript value="{!URLFOR($Resource.sfdcDatabaseAngular, 'app/js/jsrInvokeCustom.js')}"/>

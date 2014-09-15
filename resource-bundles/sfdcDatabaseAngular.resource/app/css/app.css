@@ -78,3 +78,13 @@ pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
 .comparison-review {
     /*margin-top: 20px;*/
 }
+
+
+/* Http Log */
+
+.http-request-log {
+    font-size: smaller;
+}
+.http-request-log .http-response {
+    float: right;
+}

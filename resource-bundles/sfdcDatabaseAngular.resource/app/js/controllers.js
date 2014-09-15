@@ -20,15 +20,17 @@ angular.module('myApp.controllers', [])
 	}])
 	.controller('StatusCtrl', ['$scope', function($scope) {
 	}])
-	.controller('HomeCtrl', ['$scope', 'AccountState', 'sfdc', 'AppErrors', '$rootScope',
-		function($scope, AccountState, sfdc, AppErrors, $rootScope) {
+	.controller('HomeCtrl', ['$scope', 'AccountState', 'sfdc', 'AppErrors', '$rootScope', 'TransportFlags', 'httpLog',
+		function($scope, AccountState, sfdc, AppErrors, $rootScope, TransportFlags, httpLog) {
 			$scope.gridOptions = AccountState.gridOptions;
 			$scope.AccountState = AccountState;
+			$scope.TransportFlags = TransportFlags;
+			$scope.httpLog = httpLog;
 
 			$scope.onAfterSaveItem = function(record, newFieldValue, transportFlags) {
 				console.log('Edited record:', record);
-				return sfdc.update(record, undefined, transportFlags).then(function(record) {
-					console.log('Update success!', record);
+				return sfdc.update(record, undefined, transportFlags).then(function(records) {
+					console.log('Update success!', records);
 				}).catch(function(err) {
 					console.log('Update error!', err);
 					if (typeof err == 'string') {

@@ -9,38 +9,29 @@
 				<h3>Demo</h3>
 			</div>
 			<div class="panel-body">
-				<p>The following table has editable cells. Each column has a different edit-handler, just to demonstrate.</p>
-				<br/>
-				<div class="pull-left" style="width: 350px;">
-					<p>
-						Edits to <code>Name</code> use Salesforce REST.
-					</p>
-					<p>
-						Edits to <code>Annual Revenue</code> use JavaScript Remoting.
-					</p>
-					<p>
-						Edits to <code>Phone</code> use JavaScript Remoting via Angular's <code>$http</code>.
-					</p>
-				</div>
-				<div class="pull-left" style="width: 370px;">
-					<p>
-						<span><code>transportflags = {useJsr: false};</code></span>
-					</p>
-					<p>
-						<span><code>transportflags = {useJsr: true};</code></span>
-					</p>
-					<p>
-						<span><code>transportflags = {useJsr: true, vfrVia$Http: true};</code></span>
-					</p>
+				<p>The following table has editable cells. This table's data source is 5 random records in the <code>Account__c</code> table, which is occasionally automatically reset.</p>
+				<p>
+					If <code>useJsr</code> is false, the Salesforce REST API is used, otherwise JavaScript Remoting is used. If <code>use$Http</code> is true, the request passes through Angular's $http service rather than through the Salesforce-provided <code>VisualforceRemoting.Manager</code>, which is kinda fun.
+				</p>
+
+				<div class="input-group text-center center-block">
+					<h4>Transport flags</h4>
+					<div class="checkbox-inline">
+						<input type="checkbox" ng-model="TransportFlags.useJsr"/> useJsr
+					</div>
+					<div class="checkbox-inline" ng-class="{disabled: !TransportFlags.useJsr}">
+						<input type="checkbox" ng-model="TransportFlags.jsrVia$Http" ng-disabled="!TransportFlags.useJsr"/> jsrVia$Http
+					</div>
 				</div>
 
-				<table style="margin-top: 20px;" class="pull-left" tr-ng-grid="trNgGrid" items="AccountState.mruAccounts" fields="['Id', 'Name', 'AnnualRevenue__c', 'Phone__c']">
+				<table style="margin-top: 20px;" tr-ng-grid="trNgGrid" items="AccountState.mruAccounts" fields="['Id', 'Name', 'AnnualRevenue__c', 'Phone__c']">
 					<thead>
 						<tr>
 							<th field-name="Id" display-name="Id" enable-filtering="false" enable-sorting="false" cell-width="10em" display-align="right"> </th>
-							<th field-name="Name" display-name="Name (REST)"> </th>
-							<th field-name="AnnualRevenue__c" display-name="Annual Revenue (JSR)" display-format="currency:'USD$'"> </th>
-							<th field-name="Phone__c" display-name="Phone (JSR $http)" display-format="" cell-width=""> </th>
+							<th field-name="Name" display-name="Name"> </th>
+							<th field-name="AnnualRevenue__c" display-name="Annual Revenue" display-format="currency:'USD$'"> </th>
+							<th field-name="Phone__c" display-name="Phone" display-format="" cell-width=""> </th>
+							<th field-name="Edit" display-name="Edit" display-format="" cell-width=""> </th>
 						</tr>
 					</thead>
 					<tbody>
@@ -51,27 +42,72 @@
 						   </span>
 						</td>
 						<td field-name="Name">
-							<span editable-text="gridItem.Name" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: false})">
-								 {{ gridItem.Name }}
+							<!-- <span editable-text="gridItem.Name" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: false})"> -->
+							<span editable-text="gridItem.Name" buttons="no" onaftersave="AccountState.updateAccount(gridItem, TransportFlags)">
+							<!-- <span editable-text="gridItem.Name" e-name="gridItem.Name" e-form="rowform"> -->
+								 {{ gridItem.Name || '(none)' }}
 						   </span>
 						</td>
 						<td field-name="AnnualRevenue__c">
-							<span editable-text="gridItem.AnnualRevenue__c" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true})">
-								 {{ gridItem.AnnualRevenue__c }}
+							<!-- <span editable-text="gridItem.AnnualRevenue__c" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true})"> -->
+							<span editable-text="gridItem.AnnualRevenue__c" buttons="no" onaftersave="AccountState.updateAccount(gridItem, TransportFlags)">
+							<!-- <span editable-text="gridItem.AnnualRevenue__c" e-name="gridItem.AnnualRevenue__c" e-form="rowform"> -->
+								 {{ gridItem.AnnualRevenue__c || 0 }}
 						   </span>
 						</td>
 						<td field-name="Phone__c">
-							<span editable-text="gridItem.Phone__c" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true, vfrVia$Http: true})">
-								 {{ gridItem.Phone__c }}
+							<!-- <span editable-text="gridItem.Phone__c" buttons="no" onaftersave="onAfterSaveItem(gridItem, $data, {useJsr: true, jsrVia$Http: true})"> -->
+							<span editable-text="gridItem.Phone__c" buttons="no" onaftersave="AccountState.updateAccount(gridItem, TransportFlags)">
+							<!-- <span editable-text="gridItem.Phone__c" e-name="gridItem.Phone__c" e-form="rowform"> -->
+								 {{ gridItem.Phone__c || '(none)' }}
 						   </span>
+						</td>
+						<td style="white-space: nowrap">
+							<!-- <form editable-form="rowform" name="rowform" onbeforesave="AccountState.createAccount($data)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="AccountState.lastInserted == gridItem">
+							<form editable-form="rowform" onbeforesave="AccountState.createAccount($data)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="AccountState.lastInserted == gridItem">
+								<button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+								save
+								</button>
+								<button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+								cancel
+								</button>
+							</form> -->
+							<!-- <div class="buttons" ng-show="!rowform.$visible"> -->
+							<div class="buttons">
+								<!-- <button class="btn btn-primary" ng-click="rowform.$show()">edit</button> -->
+								<button class="btn btn-danger" ng-click="AccountState.deleteAccount(gridItem, TransportFlags)">del</button>
+							</div>
 						</td>
 					</tr>
 					</tbody>
 				</table>
+				<button class="btn btn-default" ng-click="AccountState.addAccount({}, TransportFlags)">Add row</button>
 			</div>
 		</div>
-
-		<!-- <table style="width: 100px;" class="pull-right" tr-ng-grid="trNgGrid" items="AccountState.mruAccounts" fields="['Id', 'Name', 'AnnualRevenue']"> </table> -->
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3><code>$http</code> log</h3>
+			</div>
+			<div class="panel-body">
+				<ul class="http-request-log" style="font-size: smaller;">
+					<li ng-repeat="req in httpLog.requests">
+						<span ng-bind="req.method" class="http-request-method"/>
+						<span ng-bind="req.url" class="http-request-url"/>
+						<span ng-bind="'(' + req.data.action + '.' + req.data.method + ')'" class="http-request-method" ng-if="req.data.type"/>
+						<span ng-bind="'(' + req.headers['SalesforceProxy-Endpoint'] + ')'" class="http-request-method" ng-if="req.headers['SalesforceProxy-Endpoint']"/>
+						<span ng-bind="req.response.status" class="http-response"/>
+					</li>
+				</ul>
+				<!-- <ul class="http-responses" style="width: 200px">
+					<li ng-repeat="res in httpLog.responses" ng-bind="res | json">
+						<span ng-bind="req.config.method"/>
+						<span ng-bind="req.config.url"/>
+						<span ng-bind="req.status"/>
+						<span ng-bind="req.headers | json"/>
+					</li>
+				</ul> -->
+			</div>
+		</div>
 	</div>
 		
 </apex:page>

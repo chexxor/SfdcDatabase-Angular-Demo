@@ -55,7 +55,7 @@ angular.module('sfdcDatabase')
 			var transportFlags = utils.extend(appConfig.transportFlagsDefault, transportFlagsUser);
 			var pRecords;
 			if (doesJsrExist() && transportFlags.useJsr) {
-				if (transportFlags.vfrVia$Http) {
+				if (transportFlags.jsrVia$Http) {
 					pRecords = jsrQueryCustom(soql, restOrJsrConfig);
 				} else {
 					pRecords = jsrQuery(soql, restOrJsrConfig);
